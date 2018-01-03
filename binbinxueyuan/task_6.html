@@ -27,9 +27,9 @@
       width: auto;
       padding: 5px;
       font-size: 20px;
-      color: #fff;
-      background: red;
+      color: #f00;
       margin: 5px 10px 0 0;
+      border: 1px solid #f00;
     }
 
     #ulist li:hover {
@@ -45,7 +45,7 @@
       height: 25px;
     }
     #searchKey{
-      color: #f00;
+      color: #0f0;
     }
   </style>
 </head>
@@ -153,7 +153,6 @@
             var lindex=li.innerHTML.indexOf('<');
             var rindex=li.innerHTML.lastIndexOf('>');
             li.innerHTML=li.innerHTML.substring(0,lindex)+spanText+li.innerHTML.substring(rindex+1);
-            li.style.background="#f00";
           }
       }
     }
@@ -164,11 +163,11 @@
           var li=ulist.children[j];
           var liText=li.innerHTML;
           var index=liText.indexOf(searchText);
-          console.log(index)
           if (index!=-1) {
             var keyStr="<span id='searchKey'>"+liText.substring(index,index+searchText.length)+"</span>";
             li.innerHTML=liText.substring(0,index)+keyStr+liText.substring(index+searchText.length);
-            li.style.background="#0f0";
+            li.style.background="#f00";
+            li.style.color="#fff";
           }
         }
       }, false);
