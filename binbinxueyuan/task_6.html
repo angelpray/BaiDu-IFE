@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>IFE JavaScript Task 05</title>
+  <style media="screen">
+    body {
+      margin: 200px;
+    }
+
+    button {
+      background: none;
+      border: 1px solid #000;
+      padding: 5px;
+    }
+
+    #input-num {
+      margin-bottom: 10px;
+      height: 30px;
+      /* padding: 3px; */
+    }
+
+    #ulist li {
+      list-style: none;
+      float: left;
+      width: auto;
+      padding: 5px;
+      font-size: 20px;
+      color: #fff;
+      background: red;
+      margin: 5px 10px 0 0;
+    }
+
+    #ulist li:hover {
+      cursor: pointer;
+      color: #000;
+    }
+
+    .search {
+      margin: 10px 0 0 0;
+    }
+
+    #search-text {
+      height: 25px;
+    }
+    #searchKey{
+      color: #f00;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- <input type="text" name="num" id="input-num"> -->
+  <textarea name="name" rows="8" cols="80" id="input-text" placeholder="请输入标签，以一个空格/逗号/顿号作间隔"></textarea>
+  <div class="control" id="control-list">
+    <button type="button" name="button" id="left_in">左侧入</button>
+    <button type="button" name="button" id="right_in">右侧入</button>
+    <button type="button" name="button" id="left_out">左侧出</button>
+    <button type="button" name="button" id="right_out">右侧出</button>
+  </div>
+  <div class="search">
+    <input type="text" name="text" id="search-text">
+    <button type="button" name="button" id="search-btn">查询</button>
+  </div>
+  <div class="show" id="show-list">
+    <h1>队列：</h1>
+    <ul id="ulist">
+
+    </ul>
+  </div>
+  <script type="text/javascript">
+    var ulist = document.getElementById('ulist');
+    var inputText = document.getElementById('input-text');
+    var control = document.getElementById('control-list');
+    var searchInput = document.getElementById('search-text');
+    var searchBtn = document.getElementById('search-btn');
+    var data;
+
+    function getData() {
+
+      var split = [44, 32, 65292, 12289, 9];
+      var text;
+      var insertText = new Array();
+      text = inputText.value;
+      inputText.value = "";
+      for (var i = 0; i < text.length;) {
+        var index = split.indexOf(text.charCodeAt(i));
+        if (index != -1) {
+          if (i == 0) {
+            text = text.substring(i + 1);
+            i++;
+            continue;
+          }
+          insertText.push(text.substring(0, i));
+          text = text.substring(i + 1);
+          i = 0;
+        } else if (i == text.length - 1) {
+          insertText.push(text.substring(0));
+          i++;
+        } else {
+          i++;
+        }
+      }
+      return insertText;
+    }
+
+    function render() {
+      control.addEventListener('click', function(e) {
+        data = getData();
+        switch (e.target.id) {
+          case 'left_in':
+            // ulist.innerHTML = "";
+            for (var i = 0; i < data.length; i++) {
+              var li = document.createElement('li');
+              li.innerHTML = data[i];
+              ulist.insertBefore(li, ulist.firstChild);
+            }
+            break;
+          case 'right_in':
+            // ulist.innerHTML = "";
+            for (var i = 0; i < data.length; i++) {
+              var li = document.createElement('li');
+              li.innerHTML = data[i];
+              ulist.appendChild(li);
+            }
+            break;
+          case 'left_out':
+            if (ulist.children.length != 0) {
+              ulist.removeChild(ulist.firstChild);
+              data.splice(data.indexOf(ulist.firstChild.innerHTML), 1);
+            }
+            break;
+          case 'right_out':
+            if (ulist.children.length != 0) {
+              ulist.removeChild(ulist.lastChild);
+              data.splice(data.indexOf(ulist.lastChild.innerHTML), 1);
+            }
+            break;
+        }
+      }, false);
+      ulist.addEventListener('click', function(e) {
+        if (e.target.nodeName == "LI") {
+          this.removeChild(e.target);
+          data.splice(data.indexOf(e.target.innerHTML), 1);
+        }
+      }, false);
+      function back(){
+        for (var j = 0; j < ulist.children.length; j++) {
+          var li=ulist.children[j];
+          if(li.children.length!=0){
+            spanText=li.children[0].innerHTML;
+            var lindex=li.innerHTML.indexOf('<');
+            var rindex=li.innerHTML.lastIndexOf('>');
+            li.innerHTML=li.innerHTML.substring(0,lindex)+spanText+li.innerHTML.substring(rindex+1);
+            li.style.background="#f00";
+          }
+      }
+    }
+      searchBtn.addEventListener('click', function(e) {
+        back();
+        searchText = searchInput.value;
+        for (var j = 0; j < ulist.children.length; j++) {
+          var li=ulist.children[j];
+          var liText=li.innerHTML;
+          var index=liText.indexOf(searchText);
+          console.log(index)
+          if (index!=-1) {
+            var keyStr="<span id='searchKey'>"+liText.substring(index,index+searchText.length)+"</span>";
+            li.innerHTML=liText.substring(0,index)+keyStr+liText.substring(index+searchText.length);
+            li.style.background="#0f0";
+          }
+        }
+      }, false);
+    }
+
+    render();
+  </script>
+</body>
+
+</html>
