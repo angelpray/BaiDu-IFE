@@ -1,1 +1,2 @@
-# BaiDu-IFE
+<<<<<<< HEAD
+# BaiDu-IFE school
